@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 abstract class Controller extends AppContainer
 {
     use BundleTrait;
+    use \Svi\TengineBundle\BundleTrait;
 
 	function createForm(array $parameters = [])
 	{
@@ -25,7 +26,7 @@ abstract class Controller extends AppContainer
             $template = implode('/', $parts) . '/Views/' . $lastPart . '/' . $template;
         }
 
-        return $this->app->getTemplateService()->render($template, $parameters);
+        return $this->getTemplateService()->render($template, $parameters);
     }
 
     public function generateUrl($name, array $parameters = [], $absolute = false)

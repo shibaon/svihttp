@@ -5,10 +5,13 @@ namespace Svi\HttpBundle\Forms;
 use Svi\AppContainer;
 use Svi\Application;
 use Svi\HttpBundle\Bundle;
+use Svi\TengineBundle\BundleTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 class Form extends AppContainer
 {
+    use BundleTrait;
+
 	private $id = 'form';
 	private $action = '';
 	/** @var Field[] $fields */
@@ -292,23 +295,14 @@ class Form extends AppContainer
 
 	protected function renderView($template, array $params = [])
 	{
-        $this->app->getTemplateService();
-
-        if (!isset($this->app[Bundle::class . '__TwigLoaderAdded'])) {
-            if (isset($this->app['twig']) && $this->app['twig']) {
-                /** @var \Twig_Loader_Filesystem $loader */
-                $loader = $this->app['twig']->getLoader();
-                $loader->addPath($this->app[Bundle::class]->getDir());
-                $this->app[Bundle::class . '__TwigLoaderAdded'] = true;
-            }
-        }
+        $this->getTemplateService()->addLoadPath($this->app[Bundle::class]->getDir());
 
 		if (strpos($template, '/') !== false) {
 			$templatePath = $template;
 		} else {
 			$templatePath = ($this->getTemplatesPath() ? $this->getTemplatesPath() : 'Forms/Views') . '/' .$template;
 		}
-		return $this->app->getTemplateService()->render($templatePath, $params);
+		return $this->getTemplateService()->render($templatePath, $params);
 	}
 
 	/**

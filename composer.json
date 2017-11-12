@@ -4,6 +4,7 @@
     "license": "MIT",
     "require": {
         "svi/base": ">=1.0",
+        "svi/tengine": ">=1.0",
         "symfony/http-foundation": ">=3.0"
     },
     "autoload": {
