@@ -1,6 +1,6 @@
 <?php
 
-namespace Svi\OrmBundle;
+namespace Svi\HttpBundle\Forms;
 
 interface SelectableInterface
 {

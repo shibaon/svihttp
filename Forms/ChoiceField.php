@@ -2,8 +2,6 @@
 
 namespace Svi\HttpBundle\Forms;
 
-use Svi\HttpBundle\Entity\SelectableInterface;
-
 class ChoiceField extends Field
 {
 
