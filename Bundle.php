@@ -9,6 +9,8 @@ use Svi\HttpBundle\Service\CookiesService;
 use Svi\HttpBundle\Service\HttpService;
 use Svi\HttpBundle\Service\RoutingService;
 use Svi\HttpBundle\Service\SessionService;
+use Svi\HttpBundle\Twig\HttpExtension;
+use Svi\TengineBundle\Service\TemplateService;
 
 class Bundle extends \Svi\Service\BundlesService\Bundle
 {
@@ -32,6 +34,10 @@ class Bundle extends \Svi\Service\BundlesService\Bundle
             };
             $app[HttpService::class] = new HttpService($app);
         }
+
+        $this->app[TemplateService::class]->onEngineLoad(function (\Twig_Environment $twig) {
+            $twig->addExtension(new HttpExtension($this->app));
+        });
     }
 
     protected function getServices()
