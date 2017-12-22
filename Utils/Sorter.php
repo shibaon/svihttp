@@ -11,15 +11,15 @@ class Sorter
 	private $by;
 	private $columns;
 
-	public function __construct(array $columns = array(), Request $request, $defaultBy = 'id', $defaultOrder = 'desc')
+	public function __construct(array $columns = [], Request $request, $defaultBy = null, $defaultOrder = 'desc')
 	{
-		$this->columns = array_merge(array('id'), $columns);
+		$this->columns = $columns;
 
 		$this->order = $request->query->has('order') ? $request->query->get('order') : $defaultOrder;
 		if ($this->order != 'asc' && $this->order != 'desc') {
 			$this->order = $defaultOrder;
 		}
-		$this->by = $request->query->has('order_by') ? $request->query->get('order_by') : $defaultBy;
+		$this->by = $request->query->has('order_by') ? $request->query->get('order_by') : ($defaultBy ?? reset($this->columns));
 		if (!in_array($this->by, $this->columns)) {
 			$this->by = $defaultBy;
 		}
