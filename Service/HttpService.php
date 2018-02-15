@@ -55,18 +55,18 @@ class HttpService extends AppContainer
 
     public function run()
     {
-        $this->request = Request::createFromGlobals();
-        $this->route = $this->getRoutingService()->dispatchUrl(explode('?', $this->request->getRequestUri())[0]);
+        $request = $this->getRequest();
+        $this->route = $this->getRoutingService()->dispatchUrl(explode('?', $request->getRequestUri())[0]);
 
         foreach ($this->before as $before) {
-            if ($this->response = $before($this->request, $this->route)) {
+            if ($this->response = $before($request, $this->route)) {
                 break;
             }
         }
 
         if (!$this->response && $this->route) {
             $controller = new $this->route['controller']($this->app);
-            $this->response = call_user_func_array([$controller, $this->route['method']], array_merge($this->route['args'], [$this->request]));
+            $this->response = call_user_func_array([$controller, $this->route['method']], array_merge($this->route['args'], [$request]));
 
             if (!$this->response) {
                 throw new \Exception('Controller must return a response');
@@ -81,15 +81,15 @@ class HttpService extends AppContainer
             $this->response = new Response($this->response);
         }
 
-        $this->response->prepare($this->request);
+        $this->response->prepare($request);
 
         foreach ($this->after as $after) {
-            if ($result = $after($this->request, $this->response)) {
+            if ($result = $after($request, $this->response)) {
                 if (!($result instanceof Response)) {
                     $this->response = new Response($result);
                 }
                 $this->response = $result;
-                $this->response->prepare($this->request);
+                $this->response->prepare($request);
             }
         }
 
@@ -97,7 +97,7 @@ class HttpService extends AppContainer
         $this->response->sendContent();
 
         foreach ($this->finish as $finish) {
-            $finish($this->request, $this->response);
+            $finish($request, $this->response);
         }
     }
 
@@ -106,7 +106,7 @@ class HttpService extends AppContainer
      */
     public function getRequest()
     {
-        return $this->request;
+        return $this->request ?? $this->request = Request::createFromGlobals();
     }
 
     /**
