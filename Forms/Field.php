@@ -17,9 +17,7 @@ abstract class Field
         $this->parameters = array_merge([
             'trim' => true,
         ], $parameters);
-        if (array_key_exists('data', $parameters)) {
-            $this->data = $parameters['data'];
-        }
+        $this->setData(array_key_exists('data', $parameters) ? $parameters['data'] : null);
         if (!array_key_exists('attr', $this->parameters)) {
             $this->parameters['attr'] = [];
         }
