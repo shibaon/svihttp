@@ -295,14 +295,17 @@ class Form extends AppContainer
 
 	protected function renderView($template, array $params = [])
 	{
-        $this->getTemplateService()->addLoadPath($this->app[Bundle::class]->getDir());
-
 		if (strpos($template, '/') !== false) {
 			$templatePath = $template;
 		} else {
-			$templatePath = ($this->getTemplatesPath() ? $this->getTemplatesPath() : 'Forms/Views') . '/' .$template;
+			$templatePath = ($this->getTemplatesPath() ? $this->getTemplatesPath() : 'svi/http/Forms/Views') . '/' . $template;
 		}
-		return $this->getTemplateService()->render($templatePath, $params);
+
+		try {
+		    return $this->getTemplateService()->render($templatePath, $params);
+        } catch (\Twig_Error_Loader $e) {
+            return $this->getTemplateService()->render('svi/http/Forms/Views/' . $template, $params);
+        }
 	}
 
 	/**
