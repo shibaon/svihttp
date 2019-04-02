@@ -24,7 +24,7 @@ class CookiesService extends AppContainer
 	public function set($name, $value, $lifeTime = 0)
 	{
 		$response = new Response();
-		$response->headers->setCookie(new Cookie($name, $value, $lifeTime ? time() + $lifeTime : 0));
+		$response->headers->setCookie(Cookie::create($name, $value, $lifeTime ? time() + $lifeTime : 0));
 		$response->sendHeaders();
 	}
 
